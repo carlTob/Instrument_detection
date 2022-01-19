@@ -30,7 +30,7 @@ def create_imgs(video, out_folder):
         
         #diff =  frame.shape[1]-frame.shape[0]
         
-	#print(diff)
+	
         #frame = frame[0:frame.shape[0], (diff//2):(frame.shape[1]-(diff//2))]
         #dim = (frame.shape[1]-diff, frame.shape[0])
 	# resize image
