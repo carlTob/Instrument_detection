@@ -32,9 +32,13 @@ def convert(size, box):
  
 def convert_annotation(img_dir, label_dir, image_id):
     in_file = open(img_dir + '/%s.xml'%(image_id), encoding = 'utf-8')
-    out_file = open(label_dir + '%s.txt'%(image_id), 'w')
+    ##for obj in root.iter('object'):
+
+
     tree=ET.parse(in_file)
     root = tree.getroot()
+    out_file = open(label_dir + '%s.txt'%(root[1].text.split(".",1)[0]), 'w')
+    
     size = root.find('size')
     w = int(size.find('width').text)
     h = int(size.find('height').text)
@@ -54,7 +58,7 @@ def convert_all(img_dir):
     label_dir = img_dir
     if not os.path.exists(label_dir):
         os.makedirs(label_dir)
-    image_ids =[os.path.basename(f) for f in glob.glob(img_dir + '*.jpg')]
+    image_ids =[os.path.basename(f) for f in glob.glob(img_dir + '*.xml')]
     
     for image_id in image_ids:
         convert_annotation(img_dir, label_dir, image_id[:-4])
