@@ -13,7 +13,7 @@ def get_args():
     
     return parser.parse_args()
 
-classes = [ "diatermi", "forceps"] # own data sets which classes which category to write, in the order
+classes = [ "diatermi", "forceps","head"] # own data sets which classes which category to write, in the order
 
 
 
