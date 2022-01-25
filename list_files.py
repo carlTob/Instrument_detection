@@ -21,11 +21,11 @@ def create_file(dir,data_folder, name):
     with open(dir+f'{name}.txt', 'w') as list_file:
         for i, image_id in enumerate(image_ids):
             list_file.write(data_folder + image_id + '\n')
-    image_ids =[os.path.basename(f) for f in glob.glob(data_folder + '*.JPG')]
-    print(glob.glob(data_folder + '*.jpg'));
-    with open(dir+f'{name}.txt', 'w') as list_file:
-        for i, image_id in enumerate(image_ids):
-            list_file.write(data_folder + image_id + '\n')
+    #image_ids =[os.path.basename(f) for f in glob.glob(data_folder + '*.JPG')]
+    #print(glob.glob(data_folder + '*.jpg'));
+    #with open(dir+f'{name}.txt', 'w') as list_file:
+    #    for i, image_id in enumerate(image_ids):
+    #        list_file.write(data_folder + image_id + '\n')
 
 def main():
     args = get_args()

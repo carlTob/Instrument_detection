@@ -37,19 +37,19 @@ def iterate_dir(source, dest, ratio, ending):
         os.makedirs(test_dir)
 
     xml_files = glob.glob(source + '*.{}'.format(ending))
-   
+    
     num_images = len(xml_files)
     num_test_images = math.ceil(ratio*num_images)
     copy_xml = True
-
-    
+    image_ids =[os.path.basename(f) for f in glob.glob(source + '*.JPG')]
+    for i, image_id in enumerate(image_ids):
+        os.rename(source + image_id, (source + image_id).split('.')[0] +".jpg" )
     for i in range(num_test_images):
         idx = random.randint(0, len(xml_files)-1)
         basename =os.path.basename(xml_files[idx]).split('.')[0]
         filename = basename + '.jpg'
         print(filename)
-        if(not os.path.isfile(source + filename)):
-            filename = basename + '.JPG' 
+
 
 
         copyfile(os.path.join(source, filename),
@@ -63,8 +63,7 @@ def iterate_dir(source, dest, ratio, ending):
     for xml_file in xml_files:
         basename =os.path.basename(xml_file).split('.')[0]
         filename = basename + '.jpg'
-        if(not os.path.isfile(source + filename)):
-            filename = basename + '.JPG' 
+    
         copyfile(os.path.join(source, filename),
                  os.path.join(train_dir, filename))
         if copy_xml:
