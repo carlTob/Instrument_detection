@@ -20,7 +20,7 @@ import argparse
 import math
 import random
 import glob
-
+import os.path
 
 def iterate_dir(source, dest, ratio, ending):
     if not source.endswith('/'):
@@ -37,8 +37,7 @@ def iterate_dir(source, dest, ratio, ending):
         os.makedirs(test_dir)
 
     xml_files = glob.glob(source + '*.{}'.format(ending))
-    print(source + '*.{}'.format(ending))
-    print(len(xml_files))
+   
     num_images = len(xml_files)
     num_test_images = math.ceil(ratio*num_images)
     copy_xml = True
@@ -48,6 +47,10 @@ def iterate_dir(source, dest, ratio, ending):
         idx = random.randint(0, len(xml_files)-1)
         basename =os.path.basename(xml_files[idx]).split('.')[0]
         filename = basename + '.jpg'
+        print(filename)
+        if(not os.path.isfile(source + filename)):
+            filename = basename + '.JPG' 
+
 
         copyfile(os.path.join(source, filename),
                  os.path.join(test_dir, filename))
@@ -60,6 +63,8 @@ def iterate_dir(source, dest, ratio, ending):
     for xml_file in xml_files:
         basename =os.path.basename(xml_file).split('.')[0]
         filename = basename + '.jpg'
+        if(not os.path.isfile(source + filename)):
+            filename = basename + '.JPG' 
         copyfile(os.path.join(source, filename),
                  os.path.join(train_dir, filename))
         if copy_xml:
