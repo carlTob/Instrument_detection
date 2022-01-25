@@ -30,7 +30,12 @@ def iterate_dir(source, dest, ratio, ending):
     dest = dest.replace('\\', '/')
     train_dir = os.path.join(dest, 'train')
     test_dir = os.path.join(dest, 'test')
-
+    if os.path.exists(train_dir):
+    # removing the file using the os.remove() method
+        os.remove(train_dir)
+    if os.path.exists(test_dir):
+    # removing the file using the os.remove() method
+        os.remove(test_dir)
     if not os.path.exists(train_dir):
         os.makedirs(train_dir)
     if not os.path.exists(test_dir):
