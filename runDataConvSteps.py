@@ -37,7 +37,7 @@ def convert_annotation(img_dir, label_dir, image_id):
 
     tree=ET.parse(in_file)
     root = tree.getroot()
-    out_file = open(label_dir + '%s.txt'%(root[1].text.split(".",1)[0]), 'w')
+    out_file = open(label_dir + '%s.txt'%(root[1].text.split(".",1)[0]), 'a')
     
     size = root.find('size')
     w = int(size.find('width').text)
@@ -64,6 +64,15 @@ def convert_all(img_dir,dest_dir,ratio,ending):
         label_dir = label_dir + '/'
     if not os.path.exists(label_dir):
         os.makedirs(label_dir)
+    
+    image_ids =[os.path.basename(f) for f in glob.glob(label_dir + '*.JPG')]
+    for i, image_id in enumerate(image_ids):
+        os.rename(label_dir + image_id, (label_dir + image_id).split('.')[0] +".jpg" )
+
+    image_ids2 =[os.path.basename(f) for f in glob.glob(label_dir + '*.jpg')]
+    for image_id in image_ids2:
+
+        open(label_dir + '%s.txt'%(image_id.split(".",1)[0]), 'w')
     image_ids =[os.path.basename(f) for f in glob.glob(label_dir + '*.xml')]
     print(image_ids)
     for image_id in image_ids:
