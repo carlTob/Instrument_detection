@@ -21,6 +21,7 @@ import math
 import random
 import glob
 import os.path
+import shutil
 
 def iterate_dir(source, dest, ratio, ending):
     if not source.endswith('/'):
@@ -32,10 +33,10 @@ def iterate_dir(source, dest, ratio, ending):
     test_dir = os.path.join(dest, 'test')
     if os.path.exists(train_dir):
     # removing the file using the os.remove() method
-        os.remove(train_dir)
+        shutil.rmtree(train_dir)
     if os.path.exists(test_dir):
     # removing the file using the os.remove() method
-        os.remove(test_dir)
+        shutil.rmtree(test_dir)
     if not os.path.exists(train_dir):
         os.makedirs(train_dir)
     if not os.path.exists(test_dir):
