@@ -22,6 +22,9 @@ import random
 import glob
 import os.path
 import shutil
+from xxlimited import Str
+import xml.etree.ElementTree as ET
+
 
 def iterate_dir(source, dest, ratio, ending):
     if not source.endswith('/'):
@@ -41,7 +44,7 @@ def iterate_dir(source, dest, ratio, ending):
         os.makedirs(train_dir)
     if not os.path.exists(test_dir):
         os.makedirs(test_dir)
-
+    
     xml_files = glob.glob(source + '*.{}'.format(ending))
     
     num_images = len(xml_files)
@@ -50,32 +53,64 @@ def iterate_dir(source, dest, ratio, ending):
     image_ids =[os.path.basename(f) for f in glob.glob(source + '*.JPG')]
     for i, image_id in enumerate(image_ids):
         os.rename(source + image_id, (source + image_id).split('.')[0] +".jpg" )
-    for i in range(num_test_images):
-        idx = random.randint(0, len(xml_files)-1)
-        basename =os.path.basename(xml_files[idx]).split('.')[0]
-        filename = basename + '.jpg'
-        print(filename)
-
-
-
-        copyfile(os.path.join(source, filename),
-                 os.path.join(test_dir, filename))
-        if copy_xml:
-            xml_filename = basename + '.{}'.format(ending)
+    if ending == "xml":
+        
+        for i in range(num_test_images):
+            idx = random.randint(0, len(xml_files)-1)
+            basename =os.path.basename(xml_files[idx])
+            tree = ET.parse(xml_files[idx])
+            root = tree.getroot()
+            filename = basename + '.jpg'
+            print(filename)
+            
+            copyfile(os.path.join(source, root[1].text.split(".")[0]+".jpg"),
+                        os.path.join(test_dir, root[1].text.split(".")[0]+".jpg"))
+            xml_filename =  basename.split(".")[0] + '.{}'.format(ending)
             copyfile(os.path.join(source, xml_filename),
-                     os.path.join(test_dir,xml_filename))
-        xml_files.remove(xml_files[idx])
+                            os.path.join(test_dir, xml_filename))
 
-    for xml_file in xml_files:
-        basename =os.path.basename(xml_file).split('.')[0]
-        filename = basename + '.jpg'
-    
-        copyfile(os.path.join(source, filename),
-                 os.path.join(train_dir, filename))
-        if copy_xml:
-            xml_filename =  basename + '.{}'.format(ending)
-            copyfile(os.path.join(source, xml_filename),
-                     os.path.join(train_dir, xml_filename))
+
+            xml_files.remove(xml_files[idx])
+        for xml_file in xml_files:
+                tree = ET.parse(xml_file)
+                root = tree.getroot()
+                print("source",source)
+                basename =os.path.basename(xml_file).split('.')[0]
+                filename = basename + '.jpg'
+            
+                copyfile(os.path.join(source, root[1].text.split(".")[0]+".jpg"),
+                        os.path.join(train_dir, root[1].text.split(".")[0]+".jpg"))
+                xml_filename =  basename + '.{}'.format(ending)
+                copyfile(os.path.join(source, xml_filename),
+                            os.path.join(train_dir, xml_filename))
+  
+    elif ending == "txt":    
+        for i in range(num_test_images):
+            idx = random.randint(0, len(xml_files)-1)
+            basename =os.path.basename(xml_files[idx]).split('.')[0]
+            filename = basename + '.jpg'
+            print(filename)
+
+
+
+            copyfile(os.path.join(source, filename),
+                    os.path.join(test_dir, filename))
+            if copy_xml:
+                xml_filename = basename + '.{}'.format(ending)
+                copyfile(os.path.join(source, xml_filename),
+                        os.path.join(test_dir,xml_filename))
+            xml_files.remove(xml_files[idx])
+
+        for xml_file in xml_files:
+            basename =os.path.basename(xml_file).split('.')[0]
+            filename = basename + '.jpg'
+        
+            copyfile(os.path.join(source, filename),
+                    os.path.join(train_dir, filename))
+            if copy_xml:
+                xml_filename =  basename + '.{}'.format(ending)
+                copyfile(os.path.join(source, xml_filename),
+                        os.path.join(train_dir, xml_filename))
 
 
 def main():
@@ -104,9 +139,11 @@ def main():
     parser.add_argument(
         '-e', '--ending',
         help='The file ending of your annotation file, e.g. txt or xml',
-        action='store_true',
+        type=str,
         default='txt'
     )
+        
+        
     args = parser.parse_args()
 
     if args.outputDir is None:
