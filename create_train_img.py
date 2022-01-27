@@ -5,6 +5,8 @@ import os
 import random
 import string
 from moviepy.editor import VideoFileClip
+from torch import double
+import math
 #STEP = 1000
 NAME_PREFIX = 'a'
 
@@ -13,9 +15,9 @@ def get_args():
     parser.add_argument('-v', '--video', required=True, action='store', default='.', help="video")
     parser.add_argument('-f', '--image_folder', required=True, action='store', default='.', help="folder")
     parser.add_argument('-s', '--steps', action='store', default=1000, type=int,help="folder")
-    parser.add_argument('-start', '--start', action='store', default=0, type=int,help="Minute to start")
+    parser.add_argument('-start', '--start', action='store', default=0.0, type=float,help="Minute to start")
 
-    parser.add_argument('-end', '--end', action='store', default=10000,type=int, help="Minute to end")
+    parser.add_argument('-end', '--end', action='store', default=10000.0,type=float, help="Minute to end")
 
     return parser.parse_args()
 
@@ -24,6 +26,12 @@ def get_frame(frame_no, cap):
     return cap.read()
 
 def create_imgs(video, out_folder,STEP, start,end):
+    fracS, wholeS = math.modf(start)
+    fracE, wholeE = math.modf(end)
+
+    minStart = wholeS + (fracS*100)/60
+    minEnd = wholeE + (fracE*100)/60
+
     clip = VideoFileClip(video)
     minVideo = clip.duration/60
     folder =out_folder
@@ -33,12 +41,12 @@ def create_imgs(video, out_folder,STEP, start,end):
         end= minVideo
 
     
-    print('Tot ', tot)
+    #print('Tot ', tot)
     if not os.path.exists(folder):
         os.makedirs(folder)
-    print(type(start))
+    #print(type(start))
     randString = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
-    for k in range(round((start/minVideo)*tot), round((end/minVideo)*tot), STEP):
+    for k in range(round((minStart/minVideo)*tot), round((minEnd/minVideo)*tot), STEP):
         _, frame = get_frame(k, cap)
         #print(frame.shape)
         lname = folder + '/{}{}.jpg'.format(randString, k)
