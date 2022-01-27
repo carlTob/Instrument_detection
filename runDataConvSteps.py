@@ -58,7 +58,6 @@ def convert_annotation(img_dir, label_dir, image_id):
 
 
 def convert_all(img_dir,dest_dir,network,ratio,ending):
-    print("hey")
     label_dir = img_dir
     desti_dir = dest_dir
     print(img_dir)
@@ -119,7 +118,8 @@ def main():
         '-n', '--network',
         help='yolov4 or retinanet',
         type=str,
-        default=None
+        default=None,
+        required=True
     )
     parser.add_argument(
         '-r', '--ratio',

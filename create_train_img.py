@@ -2,32 +2,47 @@ import numpy as np
 import cv2
 import argparse
 import os
-
-STEP = 1000
+import random
+import string
+from moviepy.editor import VideoFileClip
+#STEP = 1000
 NAME_PREFIX = 'a'
 
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('-v', '--video', required=True, action='store', default='.', help="video")
     parser.add_argument('-f', '--image_folder', required=True, action='store', default='.', help="folder")
+    parser.add_argument('-s', '--steps', action='store', default=1000, type=int,help="folder")
+    parser.add_argument('-start', '--start', action='store', default=0, type=int,help="Minute to start")
+
+    parser.add_argument('-end', '--end', action='store', default=10000,type=int, help="Minute to end")
+
     return parser.parse_args()
 
 def get_frame(frame_no, cap):
     cap.set(cv2.CAP_PROP_POS_FRAMES, frame_no)
     return cap.read()
 
-def create_imgs(video, out_folder):
+def create_imgs(video, out_folder,STEP, start,end):
+    clip = VideoFileClip(video)
+    minVideo = clip.duration/60
     folder =out_folder
     cap = cv2.VideoCapture(video)
     tot  = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    if minVideo < end:
+        end= minVideo
+
+    
     print('Tot ', tot)
     if not os.path.exists(folder):
         os.makedirs(folder)
-    for k in range(1, tot, STEP):
+    print(type(start))
+    randString = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
+    for k in range(round((start/minVideo)*tot), round((end/minVideo)*tot), STEP):
         _, frame = get_frame(k, cap)
-        lname = folder + '/{}{}.jpg'.format(NAME_PREFIX, k)
         #print(frame.shape)
-        
+        lname = folder + '/{}{}.jpg'.format(randString, k)
+
         #diff =  frame.shape[1]-frame.shape[0]
         
 	
@@ -47,7 +62,7 @@ def create_imgs(video, out_folder):
     cv2.destroyAllWindows()
 def main():
     args = get_args()
-    create_imgs(args.video, args.image_folder)
+    create_imgs(args.video, args.image_folder,args.steps,args.start, args.end)
 
 if __name__ == '__main__':
     main()
