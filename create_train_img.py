@@ -5,7 +5,6 @@ import os
 import random
 import string
 from moviepy.editor import VideoFileClip
-from torch import double
 import math
 #STEP = 1000
 NAME_PREFIX = 'a'
