@@ -7,6 +7,7 @@ import argparse
 import glob 
 import partition_dataset as partition
 import list_files as listFiles
+import label_to_csv as lblCsv
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('-f', '--image_folder', required=True, action='store', default='.', help="folder")
@@ -56,12 +57,14 @@ def convert_annotation(img_dir, label_dir, image_id):
     
 
 
-def convert_all(img_dir,dest_dir,ratio,ending):
-
+def convert_all(img_dir,dest_dir,network,ratio,ending):
     label_dir = img_dir
+    desti_dir = dest_dir
     print(img_dir)
     if not label_dir.endswith('/'):
         label_dir = label_dir + '/'
+    if not desti_dir.endswith('/'):
+        desti_dir = desti_dir + '/'
     if not os.path.exists(label_dir):
         os.makedirs(label_dir)
     
@@ -69,20 +72,33 @@ def convert_all(img_dir,dest_dir,ratio,ending):
     for i, image_id in enumerate(image_ids):
         os.rename(label_dir + image_id, (label_dir + image_id).split('.')[0] +".jpg" )
 
-    image_ids2 =[os.path.basename(f) for f in glob.glob(label_dir + '*.jpg')]
-    for image_id in image_ids2:
 
-        open(label_dir + '%s.txt'%(image_id.split(".",1)[0]), 'w')
-    image_ids =[os.path.basename(f) for f in glob.glob(label_dir + '*.xml')]
-    print(image_ids)
-    for image_id in image_ids:
-        convert_annotation(img_dir, label_dir, image_id[:-4])
-    partition.iterate_dir(img_dir, dest_dir, ratio, ending)
-    temp_dir = dest_dir
-    if not temp_dir.endswith('/'):
-        temp_dir = temp_dir + '/'
-    listFiles.create_file(temp_dir,temp_dir+"test/", "test")
-    listFiles.create_file(temp_dir,temp_dir+"train/", "train")
+    if network == "yolov4":
+
+
+        image_ids2 =[os.path.basename(f) for f in glob.glob(label_dir + '*.jpg')]
+        for image_id in image_ids2:
+
+            open(label_dir + '%s.txt'%(image_id.split(".",1)[0]), 'w')
+        image_ids =[os.path.basename(f) for f in glob.glob(label_dir + '*.xml')]
+        print(image_ids)
+        for image_id in image_ids:
+            convert_annotation(img_dir, label_dir, image_id[:-4])
+        partition.iterate_dir(img_dir, dest_dir, ratio, ending)
+        temp_dir = dest_dir
+        if not temp_dir.endswith('/'):
+            temp_dir = temp_dir + '/'
+
+
+    
+        listFiles.create_file(temp_dir,temp_dir+"test/", "test")
+        listFiles.create_file(temp_dir,temp_dir+"train/", "train")
+    elif network == "retinanet":
+        partition.iterate_dir(img_dir, dest_dir, 0.1, "xml")
+
+        lblCsv.xml_to_csv(desti_dir+"test/",desti_dir,"test")
+        lblCsv.xml_to_csv(desti_dir+"train/",desti_dir,"train")
+
 
     
     
@@ -99,6 +115,13 @@ def main():
         default=None
     )
     parser.add_argument(
+        '-n', '--network',
+        help='yolov4 or retinanet',
+        type=str,
+        default=None,
+        required=True
+    )
+    parser.add_argument(
         '-r', '--ratio',
         help='The ratio of the number of test images over the total number of images. The default is 0.1.',
         default=0.1,
@@ -106,8 +129,9 @@ def main():
     parser.add_argument(
         '-e', '--ending',
         help='The file ending of your annotation file, e.g. txt or xml',
-        action='store_true',
+        type=str,
         default='txt'
+
     )
     args = parser.parse_args()
 
@@ -117,7 +141,7 @@ def main():
 
 
 
-    convert_all(args.image_folder,args.outputDir,args.ratio,args.ending)
+    convert_all(args.image_folder,args.outputDir,args.network,args.ratio,args.ending)
 
 if __name__ == '__main__':
     main()
