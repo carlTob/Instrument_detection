@@ -37,7 +37,7 @@ def XML2JSON(xml_path,out_path,train_or_test):
         image = dict()
         doc = xmltodict.parse(open(annotation_path).read(), force_list=('object'))
         image['id'] = image_id
-        image['file_name'] = str(doc['annotation']['filename'])
+        image['file_name'] = str(doc['annotation']['filename']).split(".")[0] + ".jpg"
         image['height'] = int(doc['annotation']['size']['height'])
         image['width'] = int(doc['annotation']['size']['width'])
         
