@@ -8,6 +8,7 @@ import glob
 import partition_dataset as partition
 import list_files as listFiles
 import label_to_csv as lblCsv
+import convertXmlStrucToCoco as convCoco
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('-f', '--image_folder', required=True, action='store', default='.', help="folder")
@@ -94,10 +95,15 @@ def convert_all(img_dir,dest_dir,network,ratio,ending):
         listFiles.create_file(temp_dir,temp_dir+"test/", "test")
         listFiles.create_file(temp_dir,temp_dir+"train/", "train")
     elif network == "retinanet":
-        partition.iterate_dir(img_dir, dest_dir, 0.1, "xml")
+        partition.iterate_dir(img_dir, desti_dir, 0.1, "xml")
 
-        lblCsv.xml_to_csv(desti_dir+"test/",desti_dir,"test")
-        lblCsv.xml_to_csv(desti_dir+"train/",desti_dir,"train")
+        ##lblCsv.xml_to_csv(desti_dir+"test/",desti_dir,"test")
+        #lblCsv.xml_to_csv(desti_dir+"train/",desti_dir,"train")
+        convCoco.XML2JSON(desti_dir+"test/",desti_dir,"test")
+        convCoco.XML2JSON(desti_dir+"train/",desti_dir,"train")
+
+        #lblCsv.xml_to_csv(desti_dir+"test/",desti_dir,"test")
+        #lblCsv.xml_to_csv(desti_dir+"train/",desti_dir,"train")
 
 
     

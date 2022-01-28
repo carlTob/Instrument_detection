@@ -9,7 +9,7 @@ import argparse
 import glob 
 import shutil
 
-def XML2JSON(xml_path,out_path):
+def XML2JSON(xml_path,out_path,train_or_test):
     if not xml_path.endswith('/'):
         xml_path = xml_path + '/'
     if not out_path.endswith('/'):
@@ -77,18 +77,34 @@ def XML2JSON(xml_path,out_path):
     attrDict["annotations"] = annotations
     attrDict["type"] = "instances"
 
-    if not os.path.exists(out_path +"COCO_dataset"):
-        os.makedirs(out_path +"COCO_dataset")
-    if not os.path.exists(out_path +"COCO_dataset"+"/data"):
-        os.makedirs(out_path +"COCO_dataset"+"/data")
-    jsonString = json.dumps(attrDict)
-    with open(out_path +"COCO_dataset"+"/"+"train.json", "w") as f:
-        f.write(jsonString)
+    if train_or_test =="train":
 
-    jpgFiles=glob.glob(os.path.join(xml_path, '*.jpg'))
-    for jpgFile in jpgFiles:
-        head, tail = os.path.split(jpgFile)
-        shutil.copyfile(xml_path +tail, out_path +"COCO_dataset"+"/data/"+ tail)
+
+        if not os.path.exists(out_path +"COCO_dataset_train"):
+            os.makedirs(out_path +"COCO_dataset_train")
+        if not os.path.exists(out_path +"COCO_dataset_train"+"/data"):
+            os.makedirs(out_path +"COCO_dataset_train"+"/data")
+        jsonString = json.dumps(attrDict)
+        with open(out_path +"COCO_dataset_train"+"/"+"train.json", "w") as f:
+            f.write(jsonString)
+
+        jpgFiles=glob.glob(os.path.join(xml_path, '*.jpg'))
+        for jpgFile in jpgFiles:
+            head, tail = os.path.split(jpgFile)
+            shutil.copyfile(xml_path +tail, out_path +"COCO_dataset_train"+"/data/"+ tail)
+    elif train_or_test =="test":
+        if not os.path.exists(out_path +"COCO_dataset_test"):
+            os.makedirs(out_path +"COCO_dataset_test")
+        if not os.path.exists(out_path +"COCO_dataset_test"+"/data"):
+            os.makedirs(out_path +"COCO_dataset_test"+"/data")
+        jsonString = json.dumps(attrDict)
+        with open(out_path +"COCO_dataset_test"+"/"+"train.json", "w") as f:
+            f.write(jsonString)
+
+        jpgFiles=glob.glob(os.path.join(xml_path, '*.jpg'))
+        for jpgFile in jpgFiles:
+            head, tail = os.path.split(jpgFile)
+            shutil.copyfile(xml_path +tail, out_path +"COCO_dataset_test"+"/data/"+ tail)
 
 
 
@@ -104,6 +120,13 @@ def main():
         type=str,
         default=None
     )
+    parser.add_argument(
+        '-tr', '--train_or_text',
+        help='Path to the output folder where the train and test dirs should be created. '
+             'Defaults to the same directory as IMAGEDIR.',
+        type=str,
+        default=None
+    )
     
     args = parser.parse_args()
 
@@ -113,7 +136,7 @@ def main():
 
 
 
-    XML2JSON(args.annotation_folder,args.outputDir)
+    XML2JSON(args.annotation_folder,args.outputDir,args.train_or_text)
 
 if __name__ == '__main__':
     main()
