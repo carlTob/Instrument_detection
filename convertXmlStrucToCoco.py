@@ -18,14 +18,14 @@ def XML2JSON(xml_path,out_path):
     xmlFiles=glob.glob(os.path.join(xml_path, '*.xml'))
     attrDict = dict()
 
-    attrDict["categories"]=[{"id":0,"name":"diatermi","supercategory":"none"},
-                    {"id":1,"name":"forceps","supercategory":"none",},
-                    {"id":2,"name":"head","supercategory":"none",},
-                    {"id":3,"name":"scalpel","supercategory":"none",},
-                {"id":4,"name":"needle driver","supercategory":"none"},
-                {"id":5,"name":"retractor","supercategory":"none"},
-                {"id":6,"name":"hl tube","supercategory":"none"},
-                {"id":7,"name":"saw","supercategory":"none"}
+    attrDict["categories"]=[{"id":1,"name":"diatermi","supercategory":"none"},
+                    {"id":2,"name":"forceps","supercategory":"none",},
+                    {"id":3,"name":"head","supercategory":"none",},
+                    {"id":4,"name":"scalpel","supercategory":"none",},
+                {"id":5,"name":"needle driver","supercategory":"none"},
+                {"id":6,"name":"retractor","supercategory":"none"},
+                {"id":7,"name":"hl tube","supercategory":"none"},
+                {"id":8,"name":"saw","supercategory":"none"}
                   ]
     images = list()
     annotations = list()
