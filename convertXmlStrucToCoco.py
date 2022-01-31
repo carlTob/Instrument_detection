@@ -9,7 +9,7 @@ import argparse
 import glob 
 import shutil
 
-def XML2JSON(xml_path,out_path,train_or_test):
+def XML2JSON(xml_path,out_path,train_or_test, network):
     if not xml_path.endswith('/'):
         xml_path = xml_path + '/'
     if not out_path.endswith('/'):
@@ -71,40 +71,77 @@ def XML2JSON(xml_path,out_path,train_or_test):
             print("File: {} doesn't have any object".format(file))
 
         
-            
+    if network == "ssd":        
 
-    attrDict["images"] = images    
-    attrDict["annotations"] = annotations
-    attrDict["type"] = "instances"
+        attrDict["images"] = images    
+        attrDict["annotations"] = annotations
+        attrDict["type"] = "instances"
+        print("hey")
+        print(out_path +"COCO_dataset")
+        if not os.path.exists(out_path +"COCO_dataset"):
+            print("in gere")
+            os.makedirs(out_path +"COCO_dataset")    
+        if not os.path.exists(out_path +"COCO_dataset"+"/annotations"):
+            os.makedirs(out_path +"COCO_dataset"+"/annotations")
+        if not os.path.exists(out_path +"COCO_dataset"+"/train2017"):
+            os.makedirs(out_path +"COCO_dataset"+"/train2017")
+        if not os.path.exists(out_path +"COCO_dataset"+"/val2017"):
+            os.makedirs(out_path +"COCO_dataset"+"/val2017")
 
-    if train_or_test =="train":
+        if train_or_test =="train":
+
+            jsonString = json.dumps(attrDict)
+            with open(out_path +"COCO_dataset"+"/annotations"+"/"+"instances_train2017.json", "w") as f:
+                f.write(jsonString)
+
+            jpgFiles=glob.glob(os.path.join(xml_path, '*.jpg'))
+            for jpgFile in jpgFiles:
+                head, tail = os.path.split(jpgFile)
+                shutil.copyfile(xml_path +tail, out_path +"COCO_dataset"+"/train2017/"+ tail)
+        elif train_or_test =="test":
+
+            jsonString = json.dumps(attrDict)
+            with open(out_path +"COCO_dataset"+"/annotations"+"/"+"instances_val2017.json", "w") as f:
+                f.write(jsonString)
+
+            jpgFiles=glob.glob(os.path.join(xml_path, '*.jpg'))
+            for jpgFile in jpgFiles:
+                head, tail = os.path.split(jpgFile)
+                shutil.copyfile(xml_path +tail, out_path +"COCO_dataset"+"/val2017/"+ tail)
+    elif network == "retinanet":
+        attrDict["images"] = images    
+        attrDict["annotations"] = annotations
+        attrDict["type"] = "instances"
+
+        if train_or_test =="train":
 
 
-        if not os.path.exists(out_path +"COCO_dataset_train"):
-            os.makedirs(out_path +"COCO_dataset_train")
-        if not os.path.exists(out_path +"COCO_dataset_train"+"/data"):
-            os.makedirs(out_path +"COCO_dataset_train"+"/data")
-        jsonString = json.dumps(attrDict)
-        with open(out_path +"COCO_dataset_train"+"/"+"train.json", "w") as f:
-            f.write(jsonString)
+            if not os.path.exists(out_path +"COCO_dataset_train"):
+                os.makedirs(out_path +"COCO_dataset_train")
+            if not os.path.exists(out_path +"COCO_dataset_train"+"/data"):
+                os.makedirs(out_path +"COCO_dataset_train"+"/data")
+            jsonString = json.dumps(attrDict)
+            with open(out_path +"COCO_dataset_train"+"/"+"train.json", "w") as f:
+                f.write(jsonString)
 
-        jpgFiles=glob.glob(os.path.join(xml_path, '*.jpg'))
-        for jpgFile in jpgFiles:
-            head, tail = os.path.split(jpgFile)
-            shutil.copyfile(xml_path +tail, out_path +"COCO_dataset_train"+"/data/"+ tail)
-    elif train_or_test =="test":
-        if not os.path.exists(out_path +"COCO_dataset_test"):
-            os.makedirs(out_path +"COCO_dataset_test")
-        if not os.path.exists(out_path +"COCO_dataset_test"+"/data"):
-            os.makedirs(out_path +"COCO_dataset_test"+"/data")
-        jsonString = json.dumps(attrDict)
-        with open(out_path +"COCO_dataset_test"+"/"+"train.json", "w") as f:
-            f.write(jsonString)
+            jpgFiles=glob.glob(os.path.join(xml_path, '*.jpg'))
+            for jpgFile in jpgFiles:
+                head, tail = os.path.split(jpgFile)
+                shutil.copyfile(xml_path +tail, out_path +"COCO_dataset_train"+"/data/"+ tail)
+        elif train_or_test =="test":
+            if not os.path.exists(out_path +"COCO_dataset_test"):
+                os.makedirs(out_path +"COCO_dataset_test")
+            if not os.path.exists(out_path +"COCO_dataset_test"+"/data"):
+                os.makedirs(out_path +"COCO_dataset_test"+"/data")
+            jsonString = json.dumps(attrDict)
+            with open(out_path +"COCO_dataset_test"+"/"+"train.json", "w") as f:
+                f.write(jsonString)
 
-        jpgFiles=glob.glob(os.path.join(xml_path, '*.jpg'))
-        for jpgFile in jpgFiles:
-            head, tail = os.path.split(jpgFile)
-            shutil.copyfile(xml_path +tail, out_path +"COCO_dataset_test"+"/data/"+ tail)
+            jpgFiles=glob.glob(os.path.join(xml_path, '*.jpg'))
+            for jpgFile in jpgFiles:
+                head, tail = os.path.split(jpgFile)
+                shutil.copyfile(xml_path +tail, out_path +"COCO_dataset_test"+"/data/"+ tail)
+
 
 
 

@@ -99,11 +99,22 @@ def convert_all(img_dir,dest_dir,network,ratio,ending):
 
         ##lblCsv.xml_to_csv(desti_dir+"test/",desti_dir,"test")
         #lblCsv.xml_to_csv(desti_dir+"train/",desti_dir,"train")
-        convCoco.XML2JSON(desti_dir+"test/",desti_dir,"test")
-        convCoco.XML2JSON(desti_dir+"train/",desti_dir,"train")
+        convCoco.XML2JSON(desti_dir+"test/",desti_dir,"test",network)
+        convCoco.XML2JSON(desti_dir+"train/",desti_dir,"train",network)
+
+        #lblCsv.xml_to_csv(desti_dir+"test/",desti_dir,"test")
+        #lblCsv.xml_to_csv(desti_dir+"train/",desti_dir,"train"
+    elif network == "ssd":
+        partition.iterate_dir(img_dir, desti_dir, 0.1, "xml")
+
+        ##lblCsv.xml_to_csv(desti_dir+"test/",desti_dir,"test")
+        #lblCsv.xml_to_csv(desti_dir+"train/",desti_dir,"train")
+        convCoco.XML2JSON(desti_dir+"test/",desti_dir,"test",network)
+        convCoco.XML2JSON(desti_dir+"train/",desti_dir,"train",network)
 
         #lblCsv.xml_to_csv(desti_dir+"test/",desti_dir,"test")
         #lblCsv.xml_to_csv(desti_dir+"train/",desti_dir,"train")
+
 
 
     
@@ -122,7 +133,7 @@ def main():
     )
     parser.add_argument(
         '-n', '--network',
-        help='yolov4 or retinanet',
+        help='yolov4, retinanet or ssd',
         type=str,
         default=None,
         required=True
