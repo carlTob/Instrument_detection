@@ -134,7 +134,7 @@ def XML2JSON(xml_path,out_path,train_or_test, network):
             if not os.path.exists(out_path +"COCO_dataset_test"+"/data"):
                 os.makedirs(out_path +"COCO_dataset_test"+"/data")
             jsonString = json.dumps(attrDict)
-            with open(out_path +"COCO_dataset_test"+"/"+"train.json", "w") as f:
+            with open(out_path +"COCO_dataset_test"+"/"+"test.json", "w") as f:
                 f.write(jsonString)
 
             jpgFiles=glob.glob(os.path.join(xml_path, '*.jpg'))
