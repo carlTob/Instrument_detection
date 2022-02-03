@@ -17,15 +17,15 @@ def clear_all(img_dir):
     for files in xml_ids:
         tree = ET.parse(label_dir+files)
         root = tree.getroot()
-        fileName= label_dir+root[1].text
+        fileName= label_dir+root[1].text.split(".")[0]+".jpg"
         if not os.path.exists(fileName):
             print(fileName)
             os.remove(label_dir+files)
 
 def main():
-    parser = argparse.ArgumentParser(description="Partition dataset of images into training and testing sets",
+    parser = argparse.ArgumentParser(description="Remove xml file if they dont have a related jpg file in the same folder.",
                                      formatter_class=argparse.RawTextHelpFormatter)
-    parser.add_argument('-f', '--image_folder', required=True, action='store', default='.', help="Folder where annotated images are.")
+    parser.add_argument('-f', '--xml_folder', required=True, action='store', default='.', help="Folder where xml files are.")
     args = parser.parse_args()
     clear_all(args.image_folder)
 

@@ -14,6 +14,8 @@ from os.path import isfile, join
 import matplotlib.pyplot as plt
 from PIL import Image
 
+##Transforms xml file to csv format.
+
 def xml_to_csv(path,out_path,train_or_test):
 
     input_path=path
@@ -54,7 +56,6 @@ def xml_to_csv(path,out_path,train_or_test):
             
 
 
-    #Define labels & write them in a file
 
     classes = [ "diatermi", "forceps","head","scalpel","needle driver", "retractor", "hl tube", "saw"] # own data sets which classes which category to write, in the order
     with open(output_path+'detectorClasses.csv', 'w') as f:
@@ -75,7 +76,7 @@ def main():
     parser = argparse.ArgumentParser(description="Partition dataset of images into training and testing sets",
                                      formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument(
-        '-i', '--imageDir',
+        '-f', '--folder',
         help='Path to the folder where the image dataset is stored. ',
         type=str,
         default=os.getcwd()
@@ -88,12 +89,12 @@ def main():
     )
     parser.add_argument(
         '-t', '--train_or_test',
-        help='Path to the output folder where the data csv file should be stored',
+        help='Either test or train folder name',
         type=str,
         default=None
     )
     args = parser.parse_args()
-    xml_to_csv(args.imageDir,args.outputDir,args.train_or_test)
+    xml_to_csv(args.folder,args.outputDir,args.train_or_test)
  
  
 

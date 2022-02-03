@@ -8,6 +8,54 @@ from os import path
 import argparse
 
 
+import xml.etree.cElementTree as ET
+
+
+
+
+root = ET.Element("annotation")
+
+folder = ET.SubElement(root, "folder")
+folder.text = "testfolder"
+
+filename = ET.SubElement(root, "filename")
+filename.text = "testfolder"
+
+path = ET.SubElement(root, "path")
+path.text = "testfolder"
+
+
+source = ET.SubElement(root, "source")
+ET.SubElement(source, "database").text = "Unknown"
+
+size = ET.SubElement(root, "size")
+ET.SubElement(size, "width").text = "Unknown"
+ET.SubElement(size, "height").text = "Unknown"
+ET.SubElement(size, "depth").text = "Unknown"
+
+
+segmented = ET.SubElement(root, "segmented")
+segmented.text = "0"
+
+#For all objects
+
+objectx = ET.SubElement(root, "object")
+ET.SubElement(objectx, "name").text = "Unknown"
+ET.SubElement(objectx, "pose").text = "Unspecified"
+ET.SubElement(objectx, "truncated").text = "0"
+ET.SubElement(objectx, "difficult").text = "0"
+
+bndbox = ET.SubElement(objectx, "bndbox")
+ET.SubElement(bndbox, "xmin").text = "Unknown"
+ET.SubElement(bndbox, "ymin").text = "Unspecified"
+ET.SubElement(bndbox, "xmax").text = "0"
+ET.SubElement(bndbox, "ymax").text = "0"
+
+
+tree = ET.ElementTree(root)
+tree.write("filename.xml")
+
+
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('-f', '--result_path', required=True, action='store', default='.', help="Where to retrieve pictures")

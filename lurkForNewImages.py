@@ -21,7 +21,7 @@ import shutil
 
 
 
-def convert_all(img_dir,dest_dir):
+def startLooking(img_dir,dest_dir):
     label_dir = img_dir
     desti_dir = dest_dir
     print(img_dir)
@@ -31,8 +31,6 @@ def convert_all(img_dir,dest_dir):
         desti_dir = desti_dir + '/'
     if not os.path.exists(dest_dir):
         os.makedirs(dest_dir)
-    
-
     file_path = label_dir +"predictions.jpg"
     i =0
     while(1):
@@ -53,8 +51,7 @@ def main():
 
     parser.add_argument(
         '-o', '--outputDir',
-        help='Path to the output folder where the train and test dirs should be created. '
-             'Defaults to the same directory as IMAGEDIR.',
+        help='Path to the output folder where images should be placed',
         type=str,
         default=None
     )
@@ -63,11 +60,7 @@ def main():
 
     if args.outputDir is None:
         args.outputDir = args.imageDir
-    
-
-
-
-    convert_all(args.image_folder,args.outputDir)
+    startLooking(args.image_folder,args.outputDir)
 
 if __name__ == '__main__':
     main()
