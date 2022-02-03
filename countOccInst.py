@@ -22,7 +22,7 @@ import random
 import glob
 import os.path
 import shutil
-from xxlimited import Str
+#from xxlimited import Str
 import xml.etree.ElementTree as ET
 
 

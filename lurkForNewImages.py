@@ -37,9 +37,9 @@ def startLooking(img_dir,dest_dir):
 
         if os.path.exists(file_path):
             i = i+1
-            shutil.move(file_path,dest_dir+"pred"+str(i)+".jpg" )
+            shutil.move(file_path,desti_dir+"pred"+str(i)+".jpg" )
         else:
-            time.sleep(1)
+            time.sleep(0.1)
 
 
     
