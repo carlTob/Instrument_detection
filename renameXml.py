@@ -14,13 +14,22 @@ def clear_all(img_dir):
     if not label_dir.endswith('/'):
         label_dir = label_dir + '/'
     xml_ids =[os.path.basename(f) for f in glob.glob(label_dir + '*.xml')]
+
+
+    # Absolute path of a file
+    #old_name = r"E:\demos\files\reports\details.txt"
+    #new_name = r"E:\demos\files\reports\new_details.txt"
+
+    # Renaming the file
+    #os.rename(old_name, new_name)
     for files in xml_ids:
         tree = ET.parse(label_dir+files)
         root = tree.getroot()
         fileName= label_dir+root[1].text.split(".")[0]+".jpg"
-        if not os.path.exists(fileName):
-            print(fileName)
-            os.remove(label_dir+files)
+        if not root[1].text.split(".")[0] == files.split(".")[0]:
+            os.rename(label_dir + files, label_dir + root[1].text.split(".")[0]+".xml" )
+            print("renamed:",files)
+
 
 def main():
     parser = argparse.ArgumentParser(description="Remove xml file if they dont have a related jpg file in the same folder.",

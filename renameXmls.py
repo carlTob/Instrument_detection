@@ -62,7 +62,6 @@ def iterate_dir(source,source_office, dest, ratio, ending):
         os.makedirs(val_dir)
     xml_files = glob.glob(source + '*.{}'.format(ending))
     xml_files_office = glob.glob(source_office + '*.{}'.format(ending))
-    images_surgery = glob.glob(source + '*.{}'.format("jpg"))
 
     num_images = len(xml_files)
     num_test_images = math.ceil(ratio*num_images)
@@ -76,10 +75,6 @@ def iterate_dir(source,source_office, dest, ratio, ending):
         os.rename(source + image_id, (source + image_id).split('.')[0] +".jpg" )
     for i, image_id in enumerate(image_ids_office):
         os.rename(source_office + image_id, (source_office + image_id).split('.')[0] +".jpg" )
-
-    images_surgery = glob.glob(source + '*.{}'.format("jpg"))
-    images_office = glob.glob(source_office + '*.{}'.format("jpg"))
-
     if ending == "xml":
         
         for i in range(num_test_images):
@@ -111,13 +106,12 @@ def iterate_dir(source,source_office, dest, ratio, ending):
   
     elif ending == "txt":    
         for i in range(num_test_images):
-            idx = random.randint(0, len(images_surgery)-1)
-            basename =os.path.basename(images_surgery[idx]).split('.')[0]
+            idx = random.randint(0, len(xml_files)-1)
+            basename =os.path.basename(xml_files[idx]).split('.')[0]
             filename = basename + '.jpg'
-            if os.path.isfile(os.path.join(source, basename +".xml")):
 
-                copyfile(os.path.join(source, basename +".xml"),
-                        os.path.join(test_dir, basename +".xml"))
+            copyfile(os.path.join(source, basename +".xml"),
+                    os.path.join(test_dir, basename +".xml"))
 
             copyfile(os.path.join(source, filename),
                     os.path.join(test_dir, filename))
@@ -125,34 +119,29 @@ def iterate_dir(source,source_office, dest, ratio, ending):
                 xml_filename = basename + '.{}'.format(ending)
                 copyfile(os.path.join(source, xml_filename),
                         os.path.join(test_dir,xml_filename))
-            images_surgery.remove(images_surgery[idx])
+            xml_files.remove(xml_files[idx])
         for i in range(num_val_images):
-            idx = random.randint(0, len(images_surgery)-1)
-            basename =os.path.basename(images_surgery[idx]).split('.')[0]
+            idx = random.randint(0, len(xml_files)-1)
+            basename =os.path.basename(xml_files[idx]).split('.')[0]
             filename = basename + '.jpg'
 
-            if os.path.isfile(os.path.join(source, basename +".xml")):
 
-                copyfile(os.path.join(source, basename +".xml"),
-                        os.path.join(val_dir, basename +".xml"))
+            copyfile(os.path.join(source, basename +".xml"),
+                    os.path.join(test_dir, basename +".xml"))
             copyfile(os.path.join(source, filename),
                     os.path.join(val_dir, filename))
             if copy_xml:
                 xml_filename = basename + '.{}'.format(ending)
                 copyfile(os.path.join(source, xml_filename),
                         os.path.join(val_dir,xml_filename))
-            images_surgery.remove(images_surgery[idx])
-        for xml_file in images_surgery:
+            xml_files.remove(xml_files[idx])
+        for xml_file in xml_files:
             basename =os.path.basename(xml_file).split('.')[0]
             filename = basename + '.jpg'
-            if os.path.isfile(os.path.join(source, basename +".xml")):
-
-                copyfile(os.path.join(source, basename +".xml"),
-                        os.path.join(train_dir_all, basename +".xml"))
-            if os.path.isfile(os.path.join(source, basename +".xml")):
-
-                copyfile(os.path.join(source, basename +".xml"),
-                        os.path.join(train_dir_surg, basename +".xml"))
+            copyfile(os.path.join(source, basename +".xml"),
+                    os.path.join(train_dir_all, basename +".xml"))
+            copyfile(os.path.join(source, basename +".xml"),
+                    os.path.join(train_dir_surg, basename +".xml"))
             copyfile(os.path.join(source, filename),
                     os.path.join(train_dir_all, filename))
             copyfile(os.path.join(source, filename),
@@ -163,15 +152,14 @@ def iterate_dir(source,source_office, dest, ratio, ending):
                         os.path.join(train_dir_surg, xml_filename))
                 copyfile(os.path.join(source, xml_filename),
                         os.path.join(train_dir_all, xml_filename))
-        for xml_file in images_office:
+        for xml_file in xml_files_office:
             basename =os.path.basename(xml_file).split('.')[0]
             filename = basename + '.jpg'
             print("in here")
             copyfile(os.path.join(source_office, filename),
                     os.path.join(train_dir_all, filename))
-            if os.path.isfile(os.path.join(source_office, basename +".xml")):
-                copyfile(os.path.join(source_office, basename +".xml"),
-                        os.path.join(train_dir_all, basename +".xml"))
+            copyfile(os.path.join(source_office, basename +".xml"),
+                    os.path.join(train_dir_all, basename +".xml"))
             if copy_xml:
                 xml_filename =  basename + '.{}'.format(ending)
                 copyfile(os.path.join(source_office, xml_filename),

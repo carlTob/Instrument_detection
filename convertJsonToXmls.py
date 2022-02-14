@@ -15,6 +15,8 @@ import xml.etree.cElementTree as ET
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('-f', '--json_path', required=True, action='store', default='.', help="Where to retrieve json file")
+    parser.add_argument('-p', '--put_path', required=True, action='store', default='.', help="Where to retrieve json file")
+
     return parser.parse_args()
 
 def convertJsonToXmls(resultPath,putPath):
@@ -106,7 +108,7 @@ def convertJsonToXmls(resultPath,putPath):
 
 def main():
     args = get_args()
-    convertJsonToXmls(args.json_path)
+    convertJsonToXmls(args.json_path,args.put_path)
 
 if __name__ == '__main__':
     main()

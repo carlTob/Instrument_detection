@@ -120,7 +120,7 @@ def main():
         default=None
     )
     parser.add_argument(
-        '-o', '--PredictFolder',
+        '-pred', '--PredictFolder',
         help='Path to the output folder where predicted txt files ans jpgs are.',
         type=str,
         default=None

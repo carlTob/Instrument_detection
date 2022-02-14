@@ -16,9 +16,16 @@ import os
 import numpy as np
 import argparse
 import os
-
+import glob
+import random
 
 import xml.etree.cElementTree as ET
+
+class Instrument:
+  def __init__(self, name, pic):
+    self.name = name
+    self.pic = pic
+
 
 
 def alphaMerge(small_foreground, background, top, left):
@@ -52,6 +59,9 @@ def addOverLap(img2,result, nbrIt,bBox,root,name,filename2,w,backH, backW):
             fac=round(random.uniform(xMax/3,  xMax/2), 2)
         copyImg2 = cv2.resize(copyImg2, (0, 0), fx=fac, fy=fac)
         dh, dw, _ = copyImg2.shape
+
+        ##cv2.imshow("result", copyImg2)
+        ##cv2.waitKey()
         maxH = backH - dh
         hStart=round(random.uniform(0, maxH))
         maxW = backW - dw
@@ -82,7 +92,23 @@ def start_procc(directory,directoryOut):
         directory = directory + '/'
     if not directoryOut.endswith('/'):
         directoryOut = directoryOut + '/'
+    
+    instList =[]
+    forceps_ids=glob.glob(os.path.join("forceps/", '*.png'))
+    for forcep_id in forceps_ids:
+        instList.append(Instrument("forceps",forcep_id))
+    needle_ids=glob.glob(os.path.join("needleDrivers/", '*.png'))
+    for needle_id in needle_ids:
+        instList.append(Instrument("needle driver",needle_id))
+    scalpel_ids=glob.glob(os.path.join("scalpel/", '*.png'))
+    for scalpel_id in scalpel_ids:
+        instList.append(Instrument("scalpel",scalpel_id))
+    diatermi_ids=glob.glob(os.path.join("diatermis/", '*.png'))
+    for diatermi_id in diatermi_ids:
+        instList.append(Instrument("diatermi",diatermi_id))
+    
 
+    print(instList[0].name)
     forceps1 = cv2.imread('forceps/test1.png', cv2.IMREAD_UNCHANGED)
     forceps2 = cv2.imread('forceps/newforceps1.png', cv2.IMREAD_UNCHANGED)
     forceps3 = cv2.imread('forceps/newForceps2.png', cv2.IMREAD_UNCHANGED)
@@ -98,7 +124,13 @@ def start_procc(directory,directoryOut):
     needleDriver2 = cv2.imread('needleDrivers/newNeedle2.png', cv2.IMREAD_UNCHANGED)
     needleDriver3 = cv2.imread('needleDrivers/newNeedle3.png', cv2.IMREAD_UNCHANGED)
     needleDriver4 = cv2.imread('needleDrivers/newNeedle4.png', cv2.IMREAD_UNCHANGED)
+    needleDriver4 = cv2.imread('needleDrivers/newNeedle5.png', cv2.IMREAD_UNCHANGED)
 
+    scalpel1 = cv2.imread('scalpel/scal1.png', cv2.IMREAD_UNCHANGED)
+    scalpel2 = cv2.imread('scalpel/scal1.png', cv2.IMREAD_UNCHANGED)
+    scalpel3 = cv2.imread('scalpel/scal1.png', cv2.IMREAD_UNCHANGED)
+    scalpel4 = cv2.imread('scalpel/scal1.png', cv2.IMREAD_UNCHANGED)
+    scalpel5 = cv2.imread('scalpel/scal1.png', cv2.IMREAD_UNCHANGED)
 
 
 
@@ -107,7 +139,10 @@ def start_procc(directory,directoryOut):
     for filename2 in os.listdir(directory):
         if filename2.endswith(".jpg"):
             background = cv2.imread(directory+filename2)
+            
             for i in range(0,6):
+                randList = random.sample(instList,random.randint(1, 7))
+
 
                 newImgName = str(i)+"-new"+str(filename2)
                 backH, backW, depth = background.shape
@@ -136,29 +171,18 @@ def start_procc(directory,directoryOut):
                 segmented.text = "0"
                 w=w+1
                 rest = i%3
+                k=0
+                for instrument in randList:
+                    if k ==0:
+                        result,root,w = addOverLap(cv2.imread(instrument.pic, cv2.IMREAD_UNCHANGED),background,1,True,root,instrument.name,instrument.name,w,backH, backW)
+                        k=1
+                    else:
+                        result,root,w = addOverLap(cv2.imread(instrument.pic, cv2.IMREAD_UNCHANGED),result,1,True,root,instrument.name,instrument.name,w,backH, backW)
 
-                if (rest)==0:
 
-                    result,root,w = addOverLap(forceps1,background,1,True,root,"forceps","forceps1",w,backH, backW)
-                    result,root,w = addOverLap(needleDriver1,result,1,True,root,"needle driver","needleDriver1",w,backH, backW)
-                    result,root,w = addOverLap(diatermi1,result,1,True,root,"diatermi","diatermi1",w,backH, backW)
-                    result,root,w = addOverLap(needleDriver2,result,1,True,root,"needle driver","needledrivber2",w,backH, backW)
-                    result,root,w = addOverLap(diatermi2,result,1,True,root,"diatermi","diatermi2",w,backH, backW)
 
-                elif (rest)==1:
 
-                    result,root,w = addOverLap(forceps2,background,1,True,root,"forceps","forceps2",w,backH, backW)
-                    result,root,w = addOverLap(needleDriver3,result,1,True,root,"needle driver","needledriver3",w,backH, backW)
-                    result,root,w = addOverLap(diatermi1,result,1,True,root,"diatermi","diatemri1",w,backH, backW)
-                    result,root,w = addOverLap(needleDriver4,result,1,True,root,"needle driver","needledriver4",w,backH, backW)
-                    result,root,w = addOverLap(diatermi2,result,1,True,root,"diatermi","dia2",w,backH, backW)
-                elif (rest)==2:
-
-                    result,root,w = addOverLap(forceps3,background,1,True,root,"forceps","forceps3",w,backH, backW)
-                    result,root,w = addOverLap(needleDriver3,result,1,True,root,"needle driver","needledriver3",w,backH, backW)
-                    result,root,w = addOverLap(diatermi3,result,1,True,root,"diatermi","diatermi3",w,backH, backW)
-                    result,root,w = addOverLap(needleDriver1,result,1,True,root,"needle driver","needledriver1",w,backH, backW)
-                    result,root,w = addOverLap(diatermi4,result,1,True,root,"diatermi","diatermi4",w,backH, backW)
+               
                 tree = ET.ElementTree(root)
 
                 tree.write(directoryOut+newImgName.split(".")[0]+".xml")

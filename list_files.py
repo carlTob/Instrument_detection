@@ -22,7 +22,7 @@ def create_file(dir,data_folder, name):
 
 def main():
     args = get_args()
-    create_file(args.data_folder, args.name)
+    create_file(args.data_folder,args.data_folder, args.name)
 
 if __name__ == '__main__':
     main()
