@@ -27,11 +27,13 @@ def showStats(FILENAME_GROUNDTRUTH,DIRNAME_NAME, DIRNAME_PREDICTION):
     DICT_TEXTNAMES_PREDICTION = { os.path.splitext(p)[0] : os.path.join(DIRNAME_PREDICTION,p) for p in os.listdir(DIRNAME_PREDICTION)}
     #print(DICT_TEXTNAMES_PREDICTION)
 
+
+
     with open(FILENAME_GROUNDTRUTH) as f:
         IMAGENAMES_GROUNDTRUTH = f.read().splitlines()
-        #print(IMAGENAMES_GROUNDTRUTH)
+    #print(IMAGENAMES_GROUNDTRUTH)
 
-    THRESH_CONFIDENCE      = 0.1
+    THRESH_CONFIDENCE      = 0.01
     THRESH_IOU_CONFUSION   = 0.5
 
     #NAMES_CLASS = [str(n) for n in range(80)]
@@ -44,7 +46,7 @@ def showStats(FILENAME_GROUNDTRUTH,DIRNAME_NAME, DIRNAME_PREDICTION):
 
     metric = metric_module.ObjectDetectionMetric(names_class=NAMES_CLASS,
                                                 check_class_first=False)
-    print(len(IMAGENAMES_GROUNDTRUTH))
+
     pbar = ProgressBar().start()
     for index in range(len(IMAGENAMES_GROUNDTRUTH)):
         imagename = IMAGENAMES_GROUNDTRUTH[index]
@@ -61,9 +63,7 @@ def showStats(FILENAME_GROUNDTRUTH,DIRNAME_NAME, DIRNAME_PREDICTION):
             #label = 0
             bboxes_groundtruth.append([float(c) for c in bbox[1:5]])
             labels_groundtruth.append(label)
-        print("index", index)
-        print("textname_prediction", textname_prediction.split(".")[0]+".txt")
-        textname_prediction = textname_prediction.split(".")[0]+".txt"
+
         with open(textname_prediction) as f:
             info_prediction = f.read().splitlines()
         bboxes_prediction = []
@@ -71,10 +71,10 @@ def showStats(FILENAME_GROUNDTRUTH,DIRNAME_NAME, DIRNAME_PREDICTION):
         scores_prediction = []
         for bbox in info_prediction:
             bbox = bbox.split()
+
             label      = int(bbox[0])
             #label      = 0
-            #print("bbox",bbox[4])
-            confidence = float(bbox[4])
+            confidence = float(bbox[5])
             if confidence>=THRESH_CONFIDENCE:
                 bboxes_prediction.append([float(c) for c in bbox[1:5]])
                 labels_prediction.append(label)
@@ -89,18 +89,21 @@ def showStats(FILENAME_GROUNDTRUTH,DIRNAME_NAME, DIRNAME_PREDICTION):
         pbar.update(progress)
     pbar.finish()
 
-    #metric.get_mAP(type_mAP="COCO",
+    #metric.get_mAP(type_mAP="VOC07",
     #               conclude=True)
     #print
-
     metric.get_mAP(type_mAP="VOC07",
                 conclude=True)
-
+    print
+    metric.get_mAP(type_mAP="VOC12",
+                conclude=True)
+    print
+    metric.get_mAP(type_mAP="COCO",
+                conclude=True)
     print
     metric.get_confusion(thresh_confidence=THRESH_CONFIDENCE,
                         thresh_IOU=THRESH_IOU_CONFUSION,
                         conclude=True)
-
 
 def main():
 

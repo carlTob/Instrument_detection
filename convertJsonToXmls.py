@@ -68,6 +68,7 @@ def convertJsonToXmls(resultPath,putPath):
             name = i['name']
             print(i['name'])
             cords = i["relative_coordinates"]
+
             print(cords)
             x= cords["center_x"]
             y= cords["center_y"]
