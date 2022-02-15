@@ -17,12 +17,7 @@ def get_args():
     parser.add_argument('-f', '--json_path', required=True, action='store', default='.', help="Where to retrieve json file")
     return parser.parse_args()
 
-def convertJsonToXmls(resultPath,putPath):
-
-    image_path = putPath
-    if not path.exists(image_path):
-        os.mkdir(image_path)
-
+def convertJsonToXmls(resultPath):
 
     f = open(resultPath)
     data = json.load(f)

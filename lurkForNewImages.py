@@ -39,7 +39,7 @@ def startLooking(img_dir,dest_dir):
             i = i+1
             shutil.move(file_path,desti_dir+"pred"+str(i)+".jpg" )
         else:
-            time.sleep(0.1)
+            time.sleep(0.01)
 
 
     
