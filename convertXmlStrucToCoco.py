@@ -20,12 +20,11 @@ def XML2JSON(xml_path,out_path,train_or_test, network):
 
     attrDict["categories"]=[{"id":1,"name":"diatermi","supercategory":"none"},
                     {"id":2,"name":"forceps","supercategory":"none",},
-                    {"id":3,"name":"head","supercategory":"none",},
-                    {"id":4,"name":"scalpel","supercategory":"none",},
-                {"id":5,"name":"needle driver","supercategory":"none"},
-                {"id":6,"name":"retractor","supercategory":"none"},
-                {"id":7,"name":"hl tube","supercategory":"none"},
-                {"id":8,"name":"saw","supercategory":"none"}
+                    {"id":3,"name":"scalpel","supercategory":"none",},
+                {"id":4,"name":"needle driver","supercategory":"none"},
+                {"id":5,"name":"retractor","supercategory":"none"},
+                {"id":6,"name":"hl tube","supercategory":"none"},
+                {"id":7,"name":"saw","supercategory":"none"}
                   ]
     images = list()
     annotations = list()
@@ -87,6 +86,8 @@ def XML2JSON(xml_path,out_path,train_or_test, network):
             os.makedirs(out_path +"COCO_dataset"+"/train2017")
         if not os.path.exists(out_path +"COCO_dataset"+"/val2017"):
             os.makedirs(out_path +"COCO_dataset"+"/val2017")
+        if not os.path.exists(out_path +"COCO_dataset"+"/test2017"):
+            os.makedirs(out_path +"COCO_dataset"+"/test2017")
 
         if train_or_test =="train":
 
@@ -98,7 +99,7 @@ def XML2JSON(xml_path,out_path,train_or_test, network):
             for jpgFile in jpgFiles:
                 head, tail = os.path.split(jpgFile)
                 shutil.copyfile(xml_path +tail, out_path +"COCO_dataset"+"/train2017/"+ tail)
-        elif train_or_test =="test":
+        elif train_or_test =="val":
 
             jsonString = json.dumps(attrDict)
             with open(out_path +"COCO_dataset"+"/annotations"+"/"+"instances_val2017.json", "w") as f:
@@ -108,6 +109,16 @@ def XML2JSON(xml_path,out_path,train_or_test, network):
             for jpgFile in jpgFiles:
                 head, tail = os.path.split(jpgFile)
                 shutil.copyfile(xml_path +tail, out_path +"COCO_dataset"+"/val2017/"+ tail)
+        elif train_or_test =="test":
+
+            jsonString = json.dumps(attrDict)
+            with open(out_path +"COCO_dataset"+"/annotations"+"/"+"instances_test2017.json", "w") as f:
+                f.write(jsonString)
+
+            jpgFiles=glob.glob(os.path.join(xml_path, '*.jpg'))
+            for jpgFile in jpgFiles:
+                head, tail = os.path.split(jpgFile)
+                shutil.copyfile(xml_path +tail, out_path +"COCO_dataset"+"/test2017/"+ tail)
     elif network == "retinanet":
         attrDict["images"] = images    
         attrDict["annotations"] = annotations
@@ -173,7 +184,7 @@ def main():
 
 
 
-    XML2JSON(args.annotation_folder,args.outputDir,args.train_or_text)
+    XML2JSON(args.annotation_folder,args.outputDir,args.train_or_text,"ssd")
 
 if __name__ == '__main__':
     main()
