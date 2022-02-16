@@ -23,7 +23,7 @@ def get_frame(frame_no, cap):
     cap.set(cv2.CAP_PROP_POS_FRAMES, frame_no)
     return cap.read()
 
-def create_imgs(video, out_folder,STEP, start,end):
+def create_imgs(video, out_folder,STEP, start=0.0, end=10000000.0):
     fracS, wholeS = math.modf(start)
     fracE, wholeE = math.modf(end)
 
@@ -42,13 +42,18 @@ def create_imgs(video, out_folder,STEP, start,end):
     randString = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
     for k in range(round((minStart/minVideo)*tot), round((minEnd/minVideo)*tot), STEP):
         _, frame = get_frame(k, cap)
-        lname = folder + '/{}{}.jpg'.format(randString, k)
-        if frame.shape[1]<frame.shape[0]:
-            frame = frame.flip(frame,1)
-        cv2.imshow('Testing', frame)
-        key = cv2.waitKey(1)
-        cv2.imwrite(lname, frame)
-        print(lname)
+        lname = folder + '/{}{}.jpg'.format(k, randString)
+        try:
+            if frame.shape[1]<frame.shape[0]:
+                frame = frame.flip(frame,1)
+            cv2.imshow('Testing', frame)
+            key = cv2.waitKey(1)
+            cv2.imwrite(lname, frame)
+            #print(lname)
+        except:
+            print("Error at the end of video, but it alright, probably")
+            break
+        
 
     cap.release()
     cv2.destroyAllWindows()

@@ -19,12 +19,7 @@ def get_args():
 
     return parser.parse_args()
 
-def convertJsonToXmls(resultPath,putPath):
-
-    image_path = putPath
-    if not path.exists(image_path):
-        os.mkdir(image_path)
-
+def convertJsonToXmls(resultPath):
 
     f = open(resultPath)
     data = json.load(f)
