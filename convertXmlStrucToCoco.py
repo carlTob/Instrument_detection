@@ -169,7 +169,7 @@ def main():
         default=None
     )
     parser.add_argument(
-        '-tr', '--train_or_text',
+        '-tr', '--train_or_test',
         help='Path to the output folder where the train and test dirs should be created. '
              'Defaults to the same directory as IMAGEDIR.',
         type=str,
