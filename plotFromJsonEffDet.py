@@ -17,18 +17,18 @@ import json
  
 # Opening JSON file
 import pandas as pd
-fWr= open("/home/serge2/Documents/Exjobb1/EfficientDet/guru99.txt","w+")
+fWr= open("/home/serge/exjobb/detectron2/metrics/metrics.txt","w+")
 fWr.write("[ \n")
-shutil.copyfile('/home/serge2/Documents/Exjobb1/EfficientDet/log.json', '/home/serge2/Documents/Exjobb1/EfficientDet/testLog.txt')
+shutil.copyfile('/home/serge/exjobb/detectron2/detectron2_cloned_from_git/detectron2/tools/output/metrics.json', '/home/serge/exjobb/detectron2/metrics/temp_metrics.txt')
 
 
 
 
-with open('/home/serge2/Documents/Exjobb1/EfficientDet/testLog.txt', "r") as a_file:
+with open('/home/serge/exjobb/detectron2/metrics/temp_metrics.txt', "r") as a_file:
     nonempty_lines = [line.strip("\n") for line in a_file if line != "\n"]
     line_count = len(nonempty_lines)
     print(line_count)
-with open('/home/serge2/Documents/Exjobb1/EfficientDet/testLog.txt', "r") as a_file:
+with open('/home/serge/exjobb/detectron2/metrics/temp_metrics.txt', "r") as a_file:
 
     c = 1
     for l in a_file:
@@ -39,9 +39,9 @@ with open('/home/serge2/Documents/Exjobb1/EfficientDet/testLog.txt', "r") as a_f
         c = c+1
 fWr.write("] \n")
 fWr.close()
-shutil.copyfile('/home/serge2/Documents/Exjobb1/EfficientDet/guru99.txt', '/home/serge2/Documents/Exjobb1/EfficientDet/guru99.json')
+shutil.copyfile('/home/serge/exjobb/detectron2/metrics/metrics.txt', '/home/serge/exjobb/detectron2/metrics/metrics.json')
 # Opening JSON file
-f = open('/home/serge2/Documents/Exjobb1/EfficientDet/guru99.json')
+f = open('/home/serge/exjobb/detectron2/metrics/metrics.json')
  
 # returns JSON object as
 # a dictionary
@@ -52,9 +52,12 @@ map = []
 time=[]
 timeVal=[]
 timeMap=[]
+iterations=[]
+total_loss=[]
 # Iterating through the json
 # list
 for i in data:
+    '''
     if "train_loss" in i["data"]:
         time.append(float(i["elapsedtime"])/60)
         vals.append(i["data"]["train_loss"])
@@ -64,6 +67,20 @@ for i in data:
     if "map" in i["data"]:
         timeMap.append(float(i["elapsedtime"])/60)
         map.append(i["data"]["map"])
+    '''
+    pairs = []
+    if "iteration" in i:
+        if "total_loss" in i:
+            if i["iteration"] < 20:
+                print("iterantion: ", float(i["iteration"]))
+                if i["iteration"] in pairs:
+                    print(i["iteration"], " already exystst" )
+                else:
+                    pairs.append(i["iteration"])
+                iterations.replace(i["iteration"])
+                total_loss.replace(i["total_loss"])
+
+    
  
 
  
@@ -71,19 +88,20 @@ for i in data:
 
 import numpy as np
 from matplotlib import pyplot as plt
-print(len(time))
-print(len(vals))
-fig, ax = plt.subplots()
-ax.plot(time,vals,color="green",label="Training loss")
-ax.plot(timeVal,valLoss,color="blue",label="Validation loss")
+#print(len(time))
+#print(len(vals))
+#fig, ax = plt.subplots()
+#ax.plot(time,vals,color="green",label="Training loss")
+#ax.plot(timeVal,valLoss,color="blue",label="Validation loss")
 
-ax2 = ax.twinx()
+#ax2 = ax.twinx()
 
-ax2.plot(timeMap,map,color="red",label="map")
-ax2.tick_params(axis='y', labelcolor='red')
-ax.legend(loc = 'upper right')
+#ax2.plot(timeMap,map,color="red",label="map")
+#ax2.tick_params(axis='y', labelcolor='red')
+#ax.legend(loc = 'upper right')
+plt.scatter(iterations, total_loss)
 plt.ylabel('Loss')
-plt.xlabel('Time (min)')
+plt.xlabel('iterations')
 plt.show()
 f.close()
 
