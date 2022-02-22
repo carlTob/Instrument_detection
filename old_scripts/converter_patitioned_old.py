@@ -47,18 +47,18 @@ def convert_annotation(image_id):
         bb = convert((w,h), b)
         out_file.write(str(cls_id) + " " + " ".join([str(a) for a in bb]) + '\n')
 
-val_percent = 0.1 # test set proportion of the total data set, the default 0.1, if the test set and the training set have been demarcated, the corresponding code is modified
-data_path = 'data / excavator /' # darknet relative path folder, see description github, and they need to modify, according to note here the absolute path can also be used
-if not os.path.exists('labels/'):
-    os.makedirs('labels/')
-image_ids =[os.path.basename(f) for f in glob.glob(IMG_DIR)]
+    val_percent = 0.1 # test set proportion of the total data set, the default 0.1, if the test set and the training set have been demarcated, the corresponding code is modified
+    data_path = 'data / excavator /' # darknet relative path folder, see description github, and they need to modify, according to note here the absolute path can also be used
+    if not os.path.exists('labels/'):
+        os.makedirs('labels/')
+    image_ids =[os.path.basename(f) for f in glob.glob(IMG_DIR)]
 
-with open('train.txt', 'w') as train_file:
-for i, image_id in enumerate(image_ids):
-    convert_annotation(image_id[:-4])
-    train_file.write(LABEL_DIR + image_id + '\n')
+    with open('train.txt', 'w') as train_file:
+        for i, image_id in enumerate(image_ids):
+            convert_annotation(image_id[:-4])
+            train_file.write(LABEL_DIR + image_id + '\n')
 
-train_file.close()
+    train_file.close()
 with open('test.txt', 'w') as val_file:
     for i, image_id in enumerate(image_ids):
         convert_annotation(image_id[:-4])
