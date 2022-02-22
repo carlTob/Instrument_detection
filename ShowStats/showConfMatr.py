@@ -26,6 +26,7 @@ def showStats(FILENAME_GROUNDTRUTH,DIRNAME_NAME, DIRNAME_PREDICTION):
 
     DICT_TEXTNAMES_PREDICTION = { os.path.splitext(p)[0] : os.path.join(DIRNAME_PREDICTION,p) for p in os.listdir(DIRNAME_PREDICTION)}
     #print(DICT_TEXTNAMES_PREDICTION)
+    #print(DICT_TEXTNAMES_PREDICTION)
 
 
 
@@ -42,7 +43,7 @@ def showStats(FILENAME_GROUNDTRUTH,DIRNAME_NAME, DIRNAME_PREDICTION):
     NUMBER_CLASSES = len(NAMES_CLASS)
 
     ###
-    print("# of data: %d"%len(IMAGENAMES_GROUNDTRUTH))
+    #print("# of data: %d"%len(IMAGENAMES_GROUNDTRUTH))
 
     metric = metric_module.ObjectDetectionMetric(names_class=NAMES_CLASS,
                                                 check_class_first=False)
@@ -50,6 +51,13 @@ def showStats(FILENAME_GROUNDTRUTH,DIRNAME_NAME, DIRNAME_PREDICTION):
     pbar = ProgressBar().start()
     for index in range(len(IMAGENAMES_GROUNDTRUTH)):
         imagename = IMAGENAMES_GROUNDTRUTH[index]
+        names = os.path.splitext( os.path.basename(imagename) )[0]
+        if not os.path.isfile(os.path.join(DIRNAME_PREDICTION,names)+".txt" ):
+            print("added",os.path.join(DIRNAME_PREDICTION,names))
+            open(os.path.join(DIRNAME_PREDICTION,names)+".txt", "a")
+            DICT_TEXTNAMES_PREDICTION[names] = os.path.join(DIRNAME_PREDICTION,names+".txt")
+
+   
         textname_prediction = DICT_TEXTNAMES_PREDICTION[ os.path.splitext( os.path.basename(imagename) )[0] ]
         textname_groundtruth = imagename.replace("images","labels").replace("jpg","txt")
         textname_prediction = textname_prediction.split(".")[0] + ".txt"
@@ -65,7 +73,7 @@ def showStats(FILENAME_GROUNDTRUTH,DIRNAME_NAME, DIRNAME_PREDICTION):
             #label = 0
             bboxes_groundtruth.append([float(c) for c in bbox[1:5]])
             labels_groundtruth.append(label)
-        print(textname_prediction)
+      #  print(textname_prediction)
         if os.path.isfile(textname_prediction):
             print ("")
         else:

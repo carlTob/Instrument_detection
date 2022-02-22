@@ -41,7 +41,7 @@ def convertJsonToXmls(resultJson, instanceJson,output_folder,conf_thresh):
     data2 = json.load(f2)
     print(data2[2])
 
- 
+
 
     for i in data2:
         image_ind = i["image_id"]-1
@@ -51,7 +51,9 @@ def convertJsonToXmls(resultJson, instanceJson,output_folder,conf_thresh):
         height = abs((i["bbox"][3]))/data["images"][image_ind]["height"]
         confidence = i["score"]
         classInd = i["category_id"] -1
-        if confidence >= conf_thresh:
+        if classInd > 6:
+            print("told you:",data["images"][image_ind])
+        if confidence >= conf_thresh and classInd <= 6:
             temp = open(output_folder +data["images"][i["image_id"]-1]["file_name"].split(".")[0]+".txt", "a")
             temp.write(str(classInd) +" " + str(confidence)+" "+ str(x_center) + " "+ str(y_center) + " " +str(width) +" " + str(height) + "\n")
 
