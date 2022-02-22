@@ -36,6 +36,7 @@ class ObjectDetectionMetric():
         for label in labels_groundtruth:
             self.number_groundtruth_all[label] += 1
         for label in labels_prediction:
+            #print("label:", label)
             self.number_prediction_all[label] += 1
 
         matrix_IOU = self._get_IOUs(bboxes_groundtruth,bboxes_prediction)
