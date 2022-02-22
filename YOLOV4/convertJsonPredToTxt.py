@@ -56,12 +56,15 @@ def convertJsonToXmls(resultPath,putPath):
             # via https://stackoverflow.com/questions/44544471/how-to-get-the-coordinates-of-the-bounding-box-in-yolo-object-detection#comment102178409_44592380
 
 
-            write_object.write(str(name)+" " + str(round(x,4)) +" " + str(round(y,4)) +" "+str(round(w,4)) + " " + str(round(h,4))  +" "+str(round(conf,4))  +"\n" )
+            #write_object.write(str(name)+" " + str(round(x,4)) +" " + str(round(y,4)) +" "+str(round(w,4)) + " " + str(round(h,4))  +" "+str(round(conf,4))  +"\n" )
 
+            write_object.write(str(name)+" " +str(round(conf,4))+" "+ str(round(x,4)) +" " + str(round(y,4)) +" "+str(round(w,4)) + " " + str(round(h,4))    +"\n" )
 
     f.close()
 
 def main():
+    #Input a json file to generate txt files for each image.
+    # Remember conf_thresh = 0.25 for conf matrix and 0.005 for interference.
     args = get_args()
     convertJsonToXmls(args.json_path,args.put_path)
 

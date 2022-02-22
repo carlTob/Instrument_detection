@@ -118,7 +118,7 @@ class ObjectDetectionMetric():
 
         if type_mAP == "VOC07":
             threshes_IOU = [0.5] # only 0.5
-            threshes_recall = np.arange(0.00,1.01,0.10) # 11-point interpolation
+            threshes_recall = np.arange(0., 1.1, 0.1)# 11-point interpolation
         elif type_mAP == "VOC12":
             threshes_IOU = [0.5] # only 0.5
             threshes_recall = [] # area under curve
@@ -166,6 +166,8 @@ class ObjectDetectionMetric():
         if len(self.IOUs_all[no_class]) == 0:
             return 0. # no data in this class
         precisions, recalls = self.get_precision_recall_curve(no_class,thresh_IOU)
+
+
         if len(threshes_recall) == 0: # calculate area under curve
             indices = np.where(recalls[1:]!=recalls[:-1])[0]
             area = np.sum( precisions[indices+1]

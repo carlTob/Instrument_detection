@@ -19,10 +19,7 @@ import json
 import pandas as pd
 fWr= open("/home/serge2/Documents/Exjobb1/EfficientDet/guru99.txt","w+")
 fWr.write("[ \n")
-shutil.copyfile('/home/serge2/Documents/Exjobb1/EfficientDet/log.json', '/home/serge2/Documents/Exjobb1/EfficientDet/testLog.txt')
-
-
-
+shutil.copyfile('/home/serge2/Documents/Exjobb1/EfficientDet/Efficientdet/log.json', '/home/serge2/Documents/Exjobb1/EfficientDet/testLog.txt')
 
 with open('/home/serge2/Documents/Exjobb1/EfficientDet/testLog.txt', "r") as a_file:
     nonempty_lines = [line.strip("\n") for line in a_file if line != "\n"]
@@ -75,7 +72,7 @@ print(len(time))
 print(len(vals))
 fig, ax = plt.subplots()
 ax.plot(time,vals,color="green",label="Training loss")
-ax.plot(timeVal,valLoss,color="blue",label="Validation loss")
+#ax.plot(timeVal,valLoss,color="blue",label="Validation loss")
 
 ax2 = ax.twinx()
 

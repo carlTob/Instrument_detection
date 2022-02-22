@@ -33,7 +33,7 @@ def showStats(FILENAME_GROUNDTRUTH,DIRNAME_NAME, DIRNAME_PREDICTION):
         IMAGENAMES_GROUNDTRUTH = f.read().splitlines()
     #print(IMAGENAMES_GROUNDTRUTH)
 
-    THRESH_CONFIDENCE      = 0.01
+    THRESH_CONFIDENCE      = 0.25
     THRESH_IOU_CONFUSION   = 0.5
 
     #NAMES_CLASS = [str(n) for n in range(80)]
@@ -52,6 +52,8 @@ def showStats(FILENAME_GROUNDTRUTH,DIRNAME_NAME, DIRNAME_PREDICTION):
         imagename = IMAGENAMES_GROUNDTRUTH[index]
         textname_prediction = DICT_TEXTNAMES_PREDICTION[ os.path.splitext( os.path.basename(imagename) )[0] ]
         textname_groundtruth = imagename.replace("images","labels").replace("jpg","txt")
+        textname_prediction = textname_prediction.split(".")[0] + ".txt"
+
 
         with open(textname_groundtruth) as f:
             info_groundtruth = f.read().splitlines()
@@ -63,20 +65,24 @@ def showStats(FILENAME_GROUNDTRUTH,DIRNAME_NAME, DIRNAME_PREDICTION):
             #label = 0
             bboxes_groundtruth.append([float(c) for c in bbox[1:5]])
             labels_groundtruth.append(label)
-
+        print(textname_prediction)
+        if os.path.isfile(textname_prediction):
+            print ("")
+        else:
+            open(textname_prediction, 'w')
         with open(textname_prediction) as f:
+          
             info_prediction = f.read().splitlines()
         bboxes_prediction = []
         labels_prediction = []
         scores_prediction = []
         for bbox in info_prediction:
             bbox = bbox.split()
-
             label      = int(bbox[0])
             #label      = 0
-            confidence = float(bbox[5])
+            confidence = float(bbox[1])
             if confidence>=THRESH_CONFIDENCE:
-                bboxes_prediction.append([float(c) for c in bbox[1:5]])
+                bboxes_prediction.append([float(c) for c in bbox[2:6]])
                 labels_prediction.append(label)
                 scores_prediction.append(confidence)
 
@@ -91,7 +97,7 @@ def showStats(FILENAME_GROUNDTRUTH,DIRNAME_NAME, DIRNAME_PREDICTION):
 
     #metric.get_mAP(type_mAP="VOC07",
     #               conclude=True)
-    #print
+    print
     metric.get_mAP(type_mAP="VOC07",
                 conclude=True)
     print
